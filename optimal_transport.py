@@ -203,4 +203,5 @@ class Simplex:
         return ans
     
 def minimum_transportation_price(a, b, c):
+    simplex= Simplex(a, b, c)
     return simplex.solve()
