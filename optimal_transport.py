@@ -1,6 +1,9 @@
 from functools import reduce
 from collections import deque
+import numpy as np
 
+# https://github.com/PythonOT/POT/blob/master/ot/bregman/_sinkhorn.py
+# https://github.com/networkx/networkx/blob/main/networkx/algorithms/flow/networksimplex.py
 def show(arr):
     return '\n'.join('  | '.join(map(str, row)) for row in arr)
         
@@ -58,6 +61,9 @@ class Simplex:
         self.costs = c
         self.a = [Pair(x, 1) for i, x in enumerate(a)]
         self.b = [Pair(x, self.m) if i == self.n - 1 else Pair(x, 0) for i, x in enumerate(b)]
+        self.aa = np.array(a)
+        self.bb = np.array(b)
+        self.cc = np.array(c)
               
     def make_initial_solution(self):
         inv_pos = {}
@@ -157,6 +163,7 @@ class Simplex:
                     max_delta = delta
                     i0, j0 = i, j
 
+        if max_delta == 0:
             return (arr, pos, inv_pos, row, col, max_delta)
 
         ##############
@@ -203,5 +210,5 @@ class Simplex:
         return ans
     
 def minimum_transportation_price(a, b, c):
-    simplex= Simplex(a, b, c)
+    simplex = Simplex(a, b, c)
     return simplex.solve()
